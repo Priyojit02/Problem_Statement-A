@@ -1,0 +1,36 @@
+This code solves the Laplace equation on a square domain using the Finite Difference Method (FDM). FDM is a numerical technique for approximating solutions to partial differential equations (PDEs) by discretizing the domain (turning it into a grid of points) and then applying the equation at each grid point. In this case, the code solves for the temperature distribution on a square plate
+#include <iostream>
+
+using namespace std;
+
+int main() {
+  // Define grid size (number of points in each dimension)
+  int nx = 20;
+  int ny = 20;
+
+  // Calculate spacing between grid points
+  double dx = 1.0 / (nx - 1);
+  double dy = 1.0 / (ny - 1);
+
+  // Initialize solution array
+  double u[nx][ny];
+
+  // Set boundary conditions (Dirichlet)
+  for (int i = 0; i < nx; ++i) {
+    u[i][0] = 1.0; // Bottom boundary
+    u[i][ny - 1] = 1.0; // Top boundary
+    u[0][i] = 0.0; // Left boundary
+    u[nx - 1][i] = 0.0; // Right boundary
+  }
+
+  // Inner points (Laplace equation)
+  for (int i = 1; i < nx - 1; ++i) {
+    for (int j = 1; j < ny - 1; ++j) {
+      u[i][j] = 0.5 * (u[i - 1][j] + u[i + 1][j] + u[i][j - 1] + u[i][j + 1]);
+    }
+  }
+
+  // Print or visualize the solution (u)
+
+  return 0;
+}
