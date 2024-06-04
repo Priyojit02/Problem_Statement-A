@@ -1,0 +1,61 @@
+ The Gauss-Seidel iterative method for solving the Laplace equation:
+#include <iostream>
+#include <limits>
+
+using namespace std;
+
+// Function to check convergence (optional)
+bool hasConverged(double u[][20], double tol, int nx, int ny) {
+  double maxChange = 0.0;
+  for (int i = 1; i < nx - 1; ++i) {
+    for (int j = 1; j < ny - 1; ++j) {
+      double prevValue = u[i][j];
+      // Update using new values in current iteration
+      u[i][j] = 0.5 * (u[i - 1][j] + u[i + 1][j] + u[i][j - 1] + u[i][j + 1]);
+      maxChange = max(maxChange, abs(prevValue - u[i][j]));
+    }
+  }
+  return maxChange < tol;
+}
+
+int main() {
+  // Define grid size (number of points in each dimension)
+  int nx = 20;
+  int ny = 20;
+
+  // Calculate spacing between grid points
+  double dx = 1.0 / (nx - 1);
+  double dy = 1.0 / (ny - 1);
+
+  // Tolerance for convergence (optional)
+  double tolerance = 1e-6;
+
+  // Initialize solution array
+  double u[nx][ny];
+
+  // Set boundary conditions (Dirichlet)
+  for (int i = 0; i < nx; ++i) {
+    u[i][0] = 1.0; // Bottom boundary
+    u[i][ny - 1] = 1.0; // Top boundary
+    u[0][i] = 0.0; // Left boundary
+    u[nx - 1][i] = 0.0; // Right boundary
+  }
+
+  // Gauss-Seidel iteration
+  int iteration = 0;
+  while (!hasConverged(u, tolerance, nx, ny)) {
+    for (int i = 1; i < nx - 1; ++i) {
+      for (int j = 1; j < ny - 1; ++j) {
+        // Update using new values in current iteration
+        u[i][j] = 0.5 * (u[i - 1][j] + u[i + 1][j] + u[i][j - 1] + u[i][j + 1]);
+      }
+    }
+    iteration++;
+  }
+
+  // Print or visualize the solution (u)
+  cout << "Iterations: " << iteration << endl;
+
+  return 0;
+}
+
